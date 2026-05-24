@@ -1,6 +1,8 @@
 # Pharmacy
-
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+
+Demo
+https://pharmacy-8ea3f.web.app/
 
 ## Development server
 
@@ -9,6 +11,14 @@ To start a local development server, run:
 ```bash
 ng serve
 ```
+
+Admin Dashboard
+<img width="3795" height="1825" alt="image" src="https://github.com/user-attachments/assets/534ff14e-2e1e-4c89-a750-742b65facbcd" />
+
+
+worker Dashboard
+<img width="3837" height="1840" alt="image" src="https://github.com/user-attachments/assets/890d1636-bf05-4940-9777-2b783a55c071" />
+
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
