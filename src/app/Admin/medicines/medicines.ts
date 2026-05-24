@@ -124,7 +124,10 @@ export class Medicines implements OnInit {
       const tempArr: Medicine[] = [];
       getAll.forEach((childs) => {
         const value = childs.val();
-        tempArr.push({ id: childs.key, ...value });
+        const expiry = new Date(value.expiry).getTime();
+        const currentDate = Date.now();
+        const daysLeft = Math.ceil((expiry - currentDate) / (1000 * 60 * 60 * 24));
+        tempArr.push({ id: childs.key, ...value, daysLeft });
       });
       this.medicinesArr = tempArr;
       this.filterMedicinesArr = tempArr;
@@ -146,10 +149,12 @@ export class Medicines implements OnInit {
       }
     });
   }
+
   deleteMed(id: string) {
     remove(ref(this.db, `medicines/${id}`));
     this.getMedicnes();
   }
+
   searchByCatlog() {
     const queryvalue = this.filterVal.toLowerCase();
     if (this.filterVal === 'All') {

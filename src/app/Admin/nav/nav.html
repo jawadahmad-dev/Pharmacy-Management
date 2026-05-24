@@ -61,7 +61,7 @@
       <!-- Dashboard -->
       <a
         routerLink="/admin"
-        routerLinkActive="bg-white text-indigo-700 border-r-4 border-indigo-500 shadow-sm"
+        routerLinkActive="bg-white text-indigo-700 border-r-25 border-indigo-400 shadow-sm"
         [routerLinkActiveOptions]="{ exact: true }"
         class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium"
         (click)="closeSidebarOnMobile()"
@@ -91,7 +91,7 @@
       <!-- Medicines -->
       <a
         routerLink="/admin/medicines"
-        routerLinkActive="bg-white text-indigo-700 border-r-4 border-indigo-500 shadow-sm"
+        routerLinkActive="bg-white text-indigo-700 border-r-25 border-indigo-400 shadow-sm"
         class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium"
         (click)="closeSidebarOnMobile()"
       >
@@ -110,11 +110,34 @@
         </svg>
         <span>Medicines</span>
       </a>
+      <!-- Transactions -->
+      <a
+        routerLink="/admin/transactions"
+        routerLinkActive="bg-white text-indigo-700 border-r-25 border-indigo-400 shadow-sm"
+        class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium"
+        (click)="closeSidebarOnMobile()"
+      >
+        <svg
+          class="w-5 h-5 text-gray-500 group-hover:text-indigo-500 transition-colors"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 7h13l-3-3m3 3l-3 3M21 17H8l3-3m-3 3l3 3"
+          />
+        </svg>
+
+        <span>Transactions</span>
+      </a>
 
       <!-- Workers -->
       <a
         routerLink="/admin/workers"
-        routerLinkActive="bg-white text-indigo-700 border-r-4 border-indigo-500 shadow-sm"
+        routerLinkActive="bg-white text-indigo-700 border-r-25 border-indigo-400 shadow-sm"
         class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium"
         (click)="closeSidebarOnMobile()"
       >

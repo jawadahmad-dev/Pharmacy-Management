@@ -5,10 +5,12 @@ import { Medicine } from '../../Interfaces/medicine';
 import { HighchartsChartDirective } from 'highcharts-angular';
 import Highcharts from 'highcharts';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { Transaction } from '../../Interfaces/transaction';
 
 @Component({
   selector: 'app-dash-board',
-  imports: [HighchartsChartDirective, DatePipe],
+  imports: [HighchartsChartDirective, DatePipe, RouterLink],
   standalone: true,
   templateUrl: './dash-board.html',
   styleUrl: './dash-board.scss',
@@ -33,7 +35,7 @@ export class DashBoard implements OnInit {
     title: { text: 'Daily Revenue (last 30 days)' },
     xAxis: { categories: [], title: { text: 'Date' } },
     yAxis: { title: { text: 'Revenue' } },
-    series: [{ type: 'line', name: 'Revenue', data: [] }],
+    series: [{ type: 'bar', name: 'Revenue', data: [] }],
     tooltip: {
       pointFormat: '<b>{point.y:.2f}</b>',
     },
@@ -74,15 +76,16 @@ export class DashBoard implements OnInit {
   }
 
   getTransactions() {
-    let counter = 0;
+    const tempArr: Transaction[] = [];
+
     get(this.tranEndPoint).then((trans) => {
       trans.forEach((item) => {
         const itemVal = item.val();
-        if (counter < 10) {
-          this.transactionsArr.push({ ...itemVal });
-        }
-        counter++;
+        tempArr.push({ ...itemVal });
       });
+
+      const size = tempArr.length;
+      this.transactionsArr = tempArr.slice(size - 10, size);
     });
   }
 
@@ -90,7 +93,6 @@ export class DashBoard implements OnInit {
     get(this.tranEndPoint)
       .then((transactions) => {
         let counter = 0;
-
         transactions.forEach((item) => {
           const itemVal = item.val();
           const current = new Date().getTime();
@@ -99,20 +101,25 @@ export class DashBoard implements OnInit {
 
           if (daysDiff <= 1) {
             this.todayrevenue += itemVal.total;
+            this.todayrevenue = Math.round(this.todayrevenue);
             this.todayTran += 1;
           }
           if (daysDiff <= 30) {
             this.sales += itemVal.total;
+            this.sales = Math.round(this.sales);
           }
 
           this.revenue += itemVal.total;
+
+          this.revenue = Math.round(this.revenue);
           this.overallTran += 1;
           counter += 1;
         });
         this.avgSales = counter > 0 ? this.revenue / counter : 0;
+        this.avgSales = Math.round(this.avgSales);
 
         this.chartOptions = {
-          chart: { type: 'line' },
+          chart: { type: 'bar' },
           title: { text: 'Revenue Overview' },
           xAxis: {
             categories: ['Today', 'Last 30 Days', 'Average / Day', 'Total Revenue'],
@@ -122,7 +129,7 @@ export class DashBoard implements OnInit {
           series: [
             {
               name: 'Revenue',
-              type: 'line',
+              type: 'bar',
               data: [this.todayrevenue, this.sales, this.avgSales, this.revenue],
             },
           ],

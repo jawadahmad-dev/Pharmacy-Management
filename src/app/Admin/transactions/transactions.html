@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="font-bold text-xl">Transactions List</h2>
+      <button class="text-blue-400 font-bold" (click)="getTransactions()">refresh🔃</button>
+    </div>
+    <div class="mr-4">
+      <div class="flex items-center">
+        <div class="flex mr-2">
+          <label class="block mr-2 text-gray-500 mb-1">Filter By days</label>
+          <select
+            (change)="searchByCatlog()"
+            [(ngModel)]="filterVal"
+            class="bg-indigo-100 outline-none cursor-pointer py-1 px-3 rounded"
+          >
+            <option value="All">All</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+          </select>
+        </div>
+        <input
+          [(ngModel)]="searchVal"
+          (input)="search()"
+          class="bg-indigo-200/70 outline-none py-1 rounded px-3"
+          placeholder="Search Users"
+          type="search"
+        />
+      </div>
+    </div>
+  </div>
+  <table class="w-full text-sm text-left">
+    <thead class="text-xs bg-zinc-200 text-gray-500 uppercase bg-gray-50">
+      <tr>
+        <th class="px-4 py-3">Name</th>
+        <th class="px-4 py-3">Number</th>
+        <th class="px-4 py-3">Date</th>
+        <th class="px-4 py-3">Total</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-100">
+      @for (item of transactionsArr ; track $index) {
+      <tr class="transition-colors all">
+        <td class="px-4 py-3 name font-medium">{{ item.name }}</td>
+        <td class="px-4 py-3">{{ item.number ? item.number : 'Not provided' }}</td>
+        <td class="px-4 py-3">{{ item.date | date : 'short' }}</td>
+        <td class="px-4 py-3">{{ item.total }}</td>
+      </tr>
+      }
+      <tr>
+        @if (invalidQ) {
+        <td class="px-6 py-3 font-medium text-red-500">No Results Found</td>
+        }
+      </tr>
+    </tbody>
+  </table>
+</div>

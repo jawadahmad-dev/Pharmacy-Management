@@ -50,6 +50,10 @@ export class Signin implements OnInit {
       } else {
         find.forEach((check) => {
           const user = check.val();
+          if (userData.password !== user.password || userData.email !== user.email) {
+            alert('please enter valid credentials');
+            return;
+          }
           if (userData.password === user.password && userData.email === user.email) {
             if (!user.role) {
               alert('Worker not approved by Admin');

@@ -7,3 +7,9 @@ select {
 button {
   cursor: pointer;
 }
+
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+}

@@ -9,6 +9,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-sales',
@@ -24,7 +26,7 @@ export class Sales implements OnInit {
   private tranEndpoint = ref(this.db, 'transactions');
   protected medicinesArr: Medicine[] = [];
   protected filterMedicinesArr: Medicine[] = [];
-
+  protected deleted: boolean = false;
   protected searchVal: string = '';
   protected categoryVal: string = 'All';
   protected cartArr: Medicine[] = [];
@@ -119,7 +121,6 @@ export class Sales implements OnInit {
       meds.total = meds.sellprice * meds.cartqty;
       this.subtotal += meds.total;
       this.tax = (this.subtotal * 8) / 100;
-
       this.gtotal = this.subtotal + this.tax;
     });
   }
@@ -129,7 +130,6 @@ export class Sales implements OnInit {
   }
   onFinalize() {
     const formVal = this.customerForm.value;
-
     const transaction = {
       name: formVal.customerName,
       number: formVal.customerNumber,
@@ -137,8 +137,9 @@ export class Sales implements OnInit {
       boughtItems: this.cartArr,
       total: this.gtotal,
     };
-    push(this.tranEndpoint, transaction);
+    this.printReceipt();
 
+    push(this.tranEndpoint, transaction);
     this.cartArr.forEach((cartMed) => {
       const medRef = ref(this.db, `medicines/${cartMed.id}`);
       get(medRef).then((snap) => {
@@ -159,5 +160,43 @@ export class Sales implements OnInit {
     setTimeout(() => {
       this.getMedicnes();
     }, 1000);
+  }
+
+  printReceipt() {
+    const source = document.getElementById('printData');
+    if (!source) return;
+
+    // Clone node (keeps content, removes layout side-effects)
+    const clone = source.cloneNode(true) as HTMLElement;
+
+    // Remove Tailwind classes that use oklch
+    clone.querySelectorAll('*').forEach((el: any) => {
+      el.style.background = '#ffffff';
+      el.style.color = '#000000';
+      el.style.borderColor = '#e5e7eb';
+      el.style.boxShadow = 'none';
+    });
+
+    clone.style.position = 'fixed';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    clone.style.width = '600px';
+    document.body.appendChild(clone);
+
+    html2canvas(clone, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+    }).then((canvas) => {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, imgHeight);
+      pdf.save('sale-receipt.pdf');
+
+      document.body.removeChild(clone);
+    });
   }
 }
